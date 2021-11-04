@@ -28,7 +28,7 @@ class Appearance_Detail(models.Model):
     title = models.CharField(max_length=255)
 
     def __str__(self):
-        return f'Apperance details for {self.car.brand} {self.car.title}'
+        return f'Appearance details for {self.car.brand} {self.car.title}'
 
 
 class Interior_Image(models.Model):
@@ -58,17 +58,21 @@ class Colored_Image(models.Model):
     def __str__(self):
         return f'{self.color_title} {self.car_position_category.car.brand} {self.car_position_category.car.title} {self.car_position_category.position_category.title} image'
 
+    def save(self, *args, **kwargs):
+        self.color_title = self.color_title.lower()
+        return self.color_title
+
 
 class Image_for_Car_PositionCategory(models.Model):
     car = models.ForeignKey(Car, on_delete=models.CASCADE, related_name='image_for_car_positioncategory')
     position_category = models.ForeignKey('PositionCategory', on_delete=models.CASCADE,
                                           related_name='images_for_positioncategory')
 
-    def __str__(self):
-        return f'Colored images for {self.car.brand} {self.car.title} {self.position_category.title}'
-
     class Meta:
         verbose_name_plural = 'Image_for_Car_PositionCategories'
+
+    def __str__(self):
+        return f'Colored images for {self.car.brand} {self.car.title} {self.position_category.title}'
 
 
 class Attribute(models.Model):
@@ -84,17 +88,17 @@ class Attribute_Category(models.Model):
     car_position = models.ForeignKey('Position', on_delete=models.CASCADE, related_name='attribute_category')
     title = models.CharField(max_length=255)
 
-    def __str__(self):
-        return f'Attribute Category for {self.car_position.car.brand} {self.car_position.car.title} position'
-
     class Meta:
         verbose_name_plural = 'Attribute_Categories'
+
+    def __str__(self):
+        return f'Attribute Category for {self.car_position.car.brand} {self.car_position.car.title} position'
 
 
 class Position(models.Model):
     car = models.OneToOneField(Car, on_delete=models.CASCADE, related_name='positions')
     title = models.CharField(max_length=255)
-    position_category = models.ForeignKey('PositionCategory', on_delete=models.CASCADE)
+    position_category = models.ForeignKey('PositionCategory', on_delete=models.CASCADE, related_name='position')
     image = models.ImageField(upload_to='car-price-image/%Y/%m/%d')
     min_price = models.IntegerField()
     transmission_name = models.CharField(max_length=255)
@@ -110,15 +114,19 @@ class Position(models.Model):
     def __str__(self):
         return f'{self.title} characteristics'
 
+    def save(self, *args, **kwargs):
+        self.fuel_type_name = self.fuel_type_name.lower()
+        return self.fuel_type_name
+
 
 class PositionCategory(models.Model):
     title = models.CharField(max_length=255)
 
-    def __str__(self):
-        return self.title
-
     class Meta:
         verbose_name_plural = 'PositionCategories'
+
+    def __str__(self):
+        return self.title
 
 
 class Car_Model_Type(models.Model):
@@ -132,11 +140,11 @@ class Gallery(models.Model):
     car = models.ForeignKey(Car, on_delete=models.CASCADE, related_name='galleries')
     image = models.ImageField(upload_to='image/%Y/%m/%d')
 
-    def __str__(self):
-        return f'{self.car.brand} {self.car.title} gallery'
-
     class Meta:
         verbose_name_plural = 'Galleries'
+
+    def __str__(self):
+        return f'{self.car.brand} {self.car.title} gallery'
 
 
 class Video(models.Model):

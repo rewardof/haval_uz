@@ -18,7 +18,7 @@ class Credit(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return str(self.month)
+        return f'{self.car.title} for {self.month} months'
 
     @property
     def model_title(self):
@@ -34,5 +34,5 @@ class Payment(models.Model):
     remain = models.FloatField(default=0)
 
     def __str__(self):
-        return str(self.order)
+        return f'payments for {self.credit}'
 

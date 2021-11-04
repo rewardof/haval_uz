@@ -4,8 +4,7 @@ from rest_framework.routers import DefaultRouter
 from car import views
 
 router = DefaultRouter()
-router.register('car-positioncategory-images', views.ImageForCarPositionCategoryViewSet,
-                'image-for-car-postioncategory')
+router.register('car-positioncategory-images', views.ImageForCarPositionCategoryViewSet,'image-for-car-postioncategory')
 router.register('colored_images', views.ColoredImageViewSet, 'colored_images')
 router.register('car_interior', views.InteriorViewSet, 'car_interior')
 router.register('car_interior_details', views.CarInteriorDetailsViewSet, 'car_interior_details')
@@ -16,10 +15,11 @@ router.register('attribute_categories', views.AttributeCategoryViewSet, 'attribu
 router.register('attributes', views.AttributeViewSet, 'attributes')
 router.register('cars_gallery', views.GalleryViewSet, 'cars_gallery')
 router.register('cars_videos', views.VideoViewSet, 'cars_videos')
-
+router.register('cars_in_dealers', views.CarPositionsInDealerViewSet, 'cars_in_dealers')
 
 urlpatterns = [
     path('', include(router.urls)),
     path('cars/', views.CarListCreateApiView.as_view(), name='car-list-create'),
-    path('cars/<int:pk>/', views.CarDetailApiView.as_view(), name='car-detail')
+    path('cars/<int:pk>/', views.CarDetailApiView.as_view(), name='car-detail'),
+    path('cars/filter/', views.CarsAccordingToPositionCategoryListApiView.as_view(), name='filtered')
 ]

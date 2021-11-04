@@ -20,7 +20,9 @@ from django.conf.urls.static import static
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('api/v1/', include('car.urls'))
+    path('api/v1/', include('car.urls')),
+    path('api/v1/', include('dealers.urls')),
+    path('api/v1/', include('payment.urls'))
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

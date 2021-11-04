@@ -1,6 +1,6 @@
 from rest_framework import status
 from rest_framework.response import Response
-from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView, get_object_or_404
+from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView, get_object_or_404, ListAPIView
 from rest_framework.viewsets import ModelViewSet
 
 from .models import Car, PositionCategory, Attribute_Category, Attribute, Car_Model_Type, Colored_Image, \
@@ -9,7 +9,9 @@ from .models import Car, PositionCategory, Attribute_Category, Attribute, Car_Mo
 from .serializers import CarsListSerializer, CarCreateSerializer, ColoredImagesSerializer, \
     ImageForCarPositionCategorySerializer, CarRetrieveSerializer, AppearanceSerializer, \
     InteriorSerializer, CarPositionSerializer, AttributeSerializer, AttributeCategorySerializer, GallerySerializer, \
-    VideoSerializer, AppearanceDetailSerializer, InteriorDetailSerializer
+    VideoSerializer, AppearanceDetailSerializer, InteriorDetailSerializer, CarPositionsInDealerSerializer, \
+    CarsAccordingToPositionCategory
+from .filters import CarsPositionFilter
 
 
 class CarListCreateApiView(ListCreateAPIView):
@@ -90,3 +92,14 @@ class GalleryViewSet(ModelViewSet):
 class VideoViewSet(ModelViewSet):
     queryset = Video.objects.all()
     serializer_class = VideoSerializer
+
+
+class CarPositionsInDealerViewSet(ModelViewSet):
+    queryset = Position.objects.all()
+    serializer_class = CarPositionsInDealerSerializer
+
+
+class CarsAccordingToPositionCategoryListApiView(ListAPIView):
+    queryset = Position.objects.all()
+    serializer_class = CarsAccordingToPositionCategory
+    filter_class = CarsPositionFilter

@@ -1,7 +1,7 @@
 from rest_framework import serializers
 from .models import Car, PositionCategory, Attribute_Category, Attribute, Car_Model_Type, Colored_Image, \
-    Image_for_Car_PositionCategory, \
-    Position, Appearance_Image, Gallery, Video, Interior_Image, Appearance_Detail, Interior_Detail
+    Image_for_Car_PositionCategory, Position, Appearance_Image, Gallery, Video, Interior_Image, \
+    Appearance_Detail, Interior_Detail
 
 
 class CarsListSerializer(serializers.ModelSerializer):
@@ -28,11 +28,6 @@ class ImageForCarPositionCategorySerializer(serializers.ModelSerializer):
     class Meta:
         model = Image_for_Car_PositionCategory
         fields = ('id', 'car', 'position_category', 'colored_images')
-
-    # def get_colored_images(self, car_position_category):
-    #     colored_images = Colored_Image.objects.filter(car_position_category=car_position_category)
-    #     serializer = ColoredImagesSerializer(colored_images, many=True)
-    #     return serializer.data
 
 
 class AppearanceSerializer(serializers.ModelSerializer):
@@ -110,11 +105,42 @@ class CarRetrieveSerializer(serializers.ModelSerializer):
     class Meta:
         model = Car
         fields = (
-            'id', 'brand', 'title', 'price', 'image_for_car_positioncategory', 'appearance_details', 'appearance_images', 'interior_details',
-            'interior_images', 'car_model_type', 'positions', 'galleries', 'videos')
+            'id', 'brand', 'title', 'price', 'image_for_car_positioncategory', 'appearance_details',
+            'appearance_images', 'interior_details', 'interior_images', 'car_model_type', 'positions',
+            'galleries', 'videos'
+        )
 
     def to_representation(self, instance):
         car_detail = super(CarRetrieveSerializer, self).to_representation(instance)
         car_detail['appearance_desc'] = ''
         car_detail['interior_desc'] = ''
         return car_detail
+
+
+class PositionCategorySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = PositionCategory
+        fields = ('id', 'title')
+
+
+class CarPositionsInDealerSerializer(serializers.ModelSerializer):
+    dealers = serializers.SlugRelatedField(many=True, read_only=True, slug_field='title')
+
+    class Meta:
+        model = Position
+        fields = ('id', 'title', 'min_price', 'image', 'dealers')
+
+
+class CarsAccordingToPositionCategory(serializers.ModelSerializer):
+    positions = serializers.SerializerMethodField()
+    position_category = serializers.SlugRelatedField(queryset=PositionCategory.objects.all(), slug_field='title')
+
+    class Meta:
+        model = Image_for_Car_PositionCategory
+        fields = ('id', 'car', 'position_category', 'positions')
+
+    def get_positions(self, obj):
+        position_category = obj.position_category
+        positions = Position.objects.filter(position_category=position_category)
+        positions_serializer = CarPositionsInDealerSerializer(positions, many=True, context=self.context)
+        return positions_serializer.data

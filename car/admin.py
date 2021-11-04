@@ -1,7 +1,7 @@
 from django.contrib import admin
 from .models import Car, PositionCategory, Attribute_Category, Attribute, Car_Model_Type, Colored_Image, \
-    Image_for_Car_PositionCategory, \
-    Position, Appearance_Image, Gallery, Video, Interior_Image, Interior_Detail, Appearance_Detail
+    Image_for_Car_PositionCategory, Position, Appearance_Image, Gallery, Video, Interior_Image, Interior_Detail, \
+    Appearance_Detail
 
 admin.site.register(Car)
 admin.site.register(PositionCategory)
