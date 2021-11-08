@@ -17,12 +17,19 @@ from django.contrib import admin
 from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
+from rest_framework.schemas import get_schema_view
+from rest_framework_swagger.views import get_swagger_view
 
 urlpatterns = [
+    path('docs/', get_swagger_view(title='haval_uz Api')),
     path('admin/', admin.site.urls),
     path('api/v1/', include('car.urls')),
     path('api/v1/', include('dealers.urls')),
-    path('api/v1/', include('payment.urls'))
+    path('api/v1/', include('payment.urls')),
+    path('schema/', get_schema_view(
+        title='Haval_uz API',
+        description='APIs for Haval_uz',
+    ), name='schema')
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

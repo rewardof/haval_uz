@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     # third_party apps
     'django_filters',
     'rest_framework',
+    'rest_framework_swagger',
 
     # my apps
     'payment.apps.PaymentConfig',
@@ -71,6 +72,9 @@ TEMPLATES = [
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
             ],
+            'libraries': {
+                'staticfiles': 'django.templatetags.static',
+            },
         },
     },
 ]
@@ -97,6 +101,7 @@ REST_FRAMEWORK = {
         'rest_framework.filters.OrderingFilter',
         'rest_framework.filters.SearchFilter',
     ),
+    'DEFAULT_SCHEMA_CLASS': 'rest_framework.schemas.coreapi.AutoSchema',
 }
 
 # Password validation
